@@ -18,18 +18,28 @@ getAllAuc <- function(strategusOutputPath) {
       directoryPath <- dirname(modelFilePath)
       databaseDetailsPath <- file.path(directoryPath, "database_details.csv")
       databaseMetaDataPath <- file.path(directoryPath, "database_meta_data.csv")
+      evalDataPath <- file.path(directoryPath, "evaluation_statistics.csv")
+      modelDesign <- file.path(directoryPath, "model_designs.csv")
+      cohorts <- file.path(directoryPath, "cohorts.csv")
 
       # Read models.csv
       modelData <- read.csv(modelFilePath)
       databaseDetails <- read.csv(databaseDetailsPath)
       databaseMetaData <- read.csv(databaseMetaDataPath)
+      evalData <- read.csv(evalDataPath)
+      modelDesign <- read.csv(modelDesign)
+      cohorts <- read.csv(cohorts)
 
-      # Merge operations
-      # First, merge models data with database details
       enrichedData <- merge(modelData, databaseDetails, by = "database_id")
-
-      # Next, merge the result with database meta data
       finalModelData <- merge(enrichedData, databaseMetaData, by.y = "database_id", by.x = "database_meta_data_id")
+      finalModelData <- merge(finalModelData, modelDesign, by = "model_design_id")
+      finalModelData <- merge(finalModelData, cohorts, by.x = "outcome_id", by.y = "cohort_id")
+
+
+      evalData <- evalData |>
+        dplyr::filter(metric == "AUROC", evaluation == "Test")
+
+      finalModelData <- merge(finalModelData, evalData, by.x = "model_id", by.y = "performance_id")
 
       # Combine with previous iterations' data
       if(is.null(combinedData)) {
@@ -41,6 +51,8 @@ getAllAuc <- function(strategusOutputPath) {
   }
 
   finalSelectedData <- combinedData %>%
-    select(cdm_source_abbreviation, model_id, analysis_id, model_design_id, model_type)
+    select(cdm_source_abbreviation, model_id, analysis_id, model_design_id, model_type, metric, value, outcome_id, cohort_name)
 
 }
+
+finalSelectedData <- getAllAuc(strategusOutputPath)
