@@ -15,8 +15,8 @@ df <- df %>%
     TRUE ~ "Other"
   )) %>%
   mutate(model_type = case_when(
-    model_type %in% c("fitXgboost") ~ "Gradient Boosting",
-    model_type %in% c("logistic") ~ "Logistic Regression",
+    model_type %in% c("fitXgboost") ~ "Gradient boosting",
+    model_type %in% c("logistic") ~ "Logistic regression",
     model_type %in% c("ResNet") ~ "ResNet",
     model_type %in% c("Transformer") ~ "Transformer",
     TRUE ~ "Other"
@@ -26,6 +26,7 @@ df <- df %>%
     cdm_source_abbreviation %in% c("cdm_optum_extended_ses_v2559") ~ "OPSES",
     cdm_source_abbreviation %in% c("DeepLearningComparison_CDMPv535.dbo") ~ "AUSOM",
     cdm_source_abbreviation %in% c("DeepLearningComparison_IPCI") ~ "IPCI",
+    cdm_source_abbreviation %in% c("DeepLearningComparison_Stanford") ~ "Stanford",
     TRUE ~ "Other"
   )) %>%
   mutate(validation = case_when(
@@ -33,6 +34,7 @@ df <- df %>%
     validation %in% c("cdm_optum_extended_ses_v2559") ~ "OPSES",
     validation %in% c("DeepLearningComparison_CDMPv535.dbo") ~ "AUSOM",
     validation %in% c("DeepLearningComparison_IPCI") ~ "IPCI",
+    validation %in% c("DeepLearningComparison_Stanford") ~ "Stanford",
     TRUE ~ "Other"
   ))
 
