@@ -27,6 +27,7 @@ df <- df %>%
     cdm_source_abbreviation %in% c("DeepLearningComparison_CDMPv535.dbo") ~ "AUSOM",
     cdm_source_abbreviation %in% c("DeepLearningComparison_IPCI") ~ "IPCI",
     cdm_source_abbreviation %in% c("DeepLearningComparison_Stanford") ~ "Stanford",
+    cdm_source_abbreviation %in% c("DeepLearningComparison_ohdsi_cumc_deid_2023q4r1") ~ "Columbia",
     TRUE ~ "Other"
   )) %>%
   mutate(validation = case_when(
@@ -35,6 +36,7 @@ df <- df %>%
     validation %in% c("DeepLearningComparison_CDMPv535.dbo") ~ "AUSOM",
     validation %in% c("DeepLearningComparison_IPCI") ~ "IPCI",
     validation %in% c("DeepLearningComparison_Stanford") ~ "Stanford",
+    validation %in% c("DeepLearningComparison_ohdsi_cumc_deid_2023q4r1") ~ "Columbia",
     TRUE ~ "Other"
   ))
 
@@ -104,8 +106,7 @@ complete_data <- merge(all_combinations, df, by = c("cdm_source_abbreviation", "
 complete_data$value <- ifelse(is.na(complete_data$value), NA, complete_data$value)
 
 color_data <- complete_data %>%
-  mutate(text_color = ifelse(value > 0.75, "black", "white"))
-
+  mutate(text_color = ifelse(value > 0.75 | value < 0.5, "black", "white"))
 
 ggplot(complete_data, aes(x = validation, y = cdm_source_abbreviation, fill = value)) +
   geom_tile(na.rm = FALSE) +
