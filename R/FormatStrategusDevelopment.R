@@ -51,8 +51,9 @@ getAllAuc <- function(strategusOutputPath) {
   }
 
   finalSelectedData <- combinedData %>%
-    select(cdm_source_abbreviation, model_id, analysis_id, model_design_id, model_type, metric, value, outcome_id, cohort_name)
+    select(cdm_source_abbreviation, database_meta_data_id, model_id, analysis_id, model_design_id, model_type, metric, value, cohort_definition_id, cohort_name)
 }
 
 finalSelectedData <- getAllAuc(strategusOutputPath)
 finalSelectedData$validation <- finalSelectedData$cdm_source_abbreviation
+finalSelectedData$validation_database_meta_data_id <- finalSelectedData$database_meta_data_id
